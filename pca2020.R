@@ -22,12 +22,21 @@ summary(newdata12$hombrk)
 newdata12$hmc[newdata12$Homicide<3.09]<-'moins_homicide'
 newdata12$hmc[between(newdata12$Homicide,3.09,9.26)]<-'homicide_average'
 newdata12$hmc[newdata12$Homicide>9.26]<-'plus_homicide'
+
 ####delete NA######
 newdata12<-na.omit(newdata12)
-####diviser par 100000 pour homicide , par 1000 pour mortalit� infantile, 100 pour chomage#####
+
+####diviser par 100000 pour homicide , par 1000 pour mortalité infantile, 100 pour chomage#####
 newdata12<-newdata12%>%
   group_by(Group.1)%>%
   mutate(Homicide = log(Homicide/100000),Mortality_rate=log(Mortality_rate/1000),Unemployment=log(Unemployment/100),Gini_index=log(Gini_index))
+
+###numbre composante à utiliser#####
+library(factoextra)
+library(FactoMineR)
+newdata12.pca1<- PCA(newdata12[,c(2:6)],  graph = FALSE)
+newdata12.pca1$eig
+fviz_screeplot(newdata12.pca, addlabels = TRUE)
 
 ###pca with biplot####
 newdata12.pca <- prcomp(newdata12[,c(2:6)], center = TRUE,scale. = TRUE)
